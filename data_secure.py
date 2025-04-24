@@ -36,12 +36,12 @@ def save_data(data):
 
 def generate_key(passkey):
     key = pbkdf2_hmac("sha256", passkey.encode(), SALT, 100000)
-    return urlsafe_b64encode(key)
+    return urlsafe_b64encode(key[:32])  # Ensure it's suitable for Fernet
 
 def hash_password(password):
-    return hashlib.sha256("sha256",password.encode(), SALT, 100000).hexdigest()
+    key = pbkdf2_hmac("sha256", password.encode(), SALT, 100000)
+    return urlsafe_b64encode(key).decode()
 
-# cryptography fernet used
 def encrpt_data(text, key):
     cipher = Fernet(generate_key(key))
     return cipher.encrypt(text.encode()).decode()
@@ -50,7 +50,7 @@ def decrypt_data(encrypted_text, key):
     try:
         cipher = Fernet(generate_key(key))
         return cipher.decrypt(encrypted_text.encode()).decode()
-    except:
+    except Exception:
         return None
     
 stored_data = load_data()
