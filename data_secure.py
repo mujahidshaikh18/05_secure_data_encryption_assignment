@@ -81,27 +81,27 @@ elif choice == "Register":
                 st.success("✅ Registration successful. You can now log in.")
         else:
             st.warning("⚠️ Please enter both username and password.")
-    elif choice == "Login":
-        st.subheader("🔑 Reauthorization Required")
-        username = st.text_input("Username")
-        password = st.text_input("Enter Master Password", type="password")
+elif choice == "Login":
+    st.subheader("🔑 Reauthorization Required")
+    username = st.text_input("Username")
+    password = st.text_input("Enter Master Password", type="password")
 
-        if st.button("Login"):
-            if username in stored_data:
-                if stored_data[username]["password"] == hash_password(password):
-                    st.session_state.authenticated_user = username
-                    st.session_state.failed_attempts = 0
-                    st.success("✅ Reauthorized successfully! Redirecting to Retrieve Data...")
-                    st.experimental_rerun()
-                else:
-                    st.session_state.failed_attempts += 1
-                    if st.session_state.failed_attempts >= 3:
-                        st.session_state.lockout_time = time.time() + LOCKOUT_TIME
-                        st.warning(f"Too many failed attempts. Lockout for 🕰️ {LOCKOUT_TIME} seconds.")
-                    else:
-                        st.warning("❌ Incorrect password. Please try again.")
+    if st.button("Login"):
+        if username in stored_data:
+            if stored_data[username]["password"] == hash_password(password):
+                st.session_state.authenticated_user = username
+                st.session_state.failed_attempts = 0
+                st.success("✅ Reauthorized successfully! Redirecting to Retrieve Data...")
+                st.experimental_rerun()
             else:
-                st.warning("⚠️ User not found. Please register first.")
+                st.session_state.failed_attempts += 1
+                if st.session_state.failed_attempts >= 3:
+                    st.session_state.lockout_time = time.time() + LOCKOUT_TIME
+                    st.warning(f"Too many failed attempts. Lockout for 🕰️ {LOCKOUT_TIME} seconds.")
+                else:
+                    st.warning("❌ Incorrect password. Please try again.")
+        else:
+            st.warning("⚠️ User not found. Please register first.")
 
 elif choice == "Store Data":
     if st.session_state.authenticated_user:
