@@ -1,2 +1,2 @@
-stremlit
+streamlit
 cryptography
