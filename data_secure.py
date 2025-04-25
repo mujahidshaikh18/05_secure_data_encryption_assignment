@@ -92,7 +92,7 @@ elif choice == "Login":
                 st.session_state.authenticated_user = username
                 st.session_state.failed_attempts = 0
                 st.success("✅ Reauthorized successfully! Redirecting to Retrieve Data...")
-                st.experimental_rerun()
+                
             else:
                 st.session_state.failed_attempts += 1
                 if st.session_state.failed_attempts >= 3:
